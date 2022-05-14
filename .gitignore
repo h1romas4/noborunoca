@@ -1,0 +1,5 @@
+build/
+dist/
+.tmp/
+.ticks_history.txt
+__pycache__
