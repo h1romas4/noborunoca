@@ -1,12 +1,6 @@
 # "NOBORUNOCA" for MSX
 
-![](https://github.com/h1romas4/noborunoca/workflows/Build/badge.svg)
-
-[Playable by WebMSX](https://webmsx.org/cbios/?MACHINE=MSX2J&ROM=https://github.com/h1romas4/noborunoca/releases/download/v1.0.0/noborunoca.rom)
-
-![](https://raw.githubusercontent.com/h1romas4/noborunoca/main/docs/images/noborunoca-01.png)
-
-![](https://raw.githubusercontent.com/h1romas4/noborunoca/main/docs/images/noborunoca-02.png)
+[Playable by WebMSX](https://webmsx.org/cbios/?MACHINE=MSX2J&ROM=https://github.com/h1romas4/noborunoca/releases/download/v0.7.0/noborunoca.rom)
 
 ## License
 
