@@ -44,7 +44,7 @@ extern uint8_t pcg_char[], pcg_color[];
 extern uint8_t sprite_char1_color1[], sprite_char1_color2[];
 extern uint8_t sprite_char2_color1[], sprite_char2_color2[];
 // 音楽・効果音のラベル参照（psgdriver.asm 用）
-extern uint8_t music_title[], music_main[], music_game_over[], sound_extend[];
+extern uint8_t music_title[], music_main[], music_game_over[], music_game_over_2[], sound_extend[];
 // サウンドステータス（ワークエリアから取得）
 extern uint8_t sounddrv_bgmwk[];
 
@@ -838,7 +838,7 @@ void game_main(uint8_t trigger)
     if(!move_my(jump_power)) {
         // やられサウンド再生
         game.sound_play = 2;
-        sounddrv_bgmplay(music_game_over);
+        sounddrv_bgmplay(music_game_over_2);
         // ゲームオーバーに遷移
         game.tick = 0;
         game.state = GAME_OVER;
