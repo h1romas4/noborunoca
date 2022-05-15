@@ -163,6 +163,7 @@ void init_graphics()
     set_sprite_16(3, sprite_char2_color2);
 }
 
+// __INTELLISENSE__ 判定は vscode で非標準インラインアセンブル構文をエラーにしないように挿入
 #ifndef __INTELLISENSE__
 void write_psg(uint8_t reg, uint8_t dat)
 {
