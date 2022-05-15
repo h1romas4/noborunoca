@@ -925,10 +925,6 @@ void game_main(uint8_t trigger)
     if(game.tick % 60 == 0) {
         game.score += 5;
     }
-    // ハイスコア更新
-    if(game.score_hi < game.score) {
-        game.score_hi = game.score;
-    }
 
     // レベルエクステンド
     if(game_stage.climbed_pos > GAME_EXTEND_FLOOR) {
@@ -947,6 +943,11 @@ void game_main(uint8_t trigger)
         game.score += 30;
         // レベル更新
         print_extend();
+    }
+
+    // ハイスコア更新
+    if(game.score_hi < game.score) {
+        game.score_hi = game.score;
     }
 
     // スコア表示(遅くなるので 30フレームごと)
