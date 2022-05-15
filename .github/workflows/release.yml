@@ -28,5 +28,5 @@ jobs:
         ninja
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/example.rom"
+        artifacts: "dist/noborunoca.rom"
         token: ${{ secrets.GITHUB_TOKEN }}
