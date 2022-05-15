@@ -6,6 +6,8 @@
 
 🎮 [Let's Play! by WebMSX](https://webmsx.org/cbios/?MACHINE=MSX2J&ROM=https://github.com/h1romas4/noborunoca/releases/download/v1.0.0/noborunoca.rom)
 
+📼 [YouTube Video](https://www.youtube.com/watch?v=SFgWwkPuj2M)
+
 ## License
 
 BSD 3-Clause License
