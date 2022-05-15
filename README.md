@@ -1,4 +1,6 @@
-# "NOBORUNOCA" for MSX
+# MSX Game "NOBORUNOCA"
+
+![](https://github.com/h1romas4/noborunoca/workflows/Build/badge.svg)
 
 ![](https://raw.githubusercontent.com/h1romas4/noborunoca/main/docs/noborunoca-01.png)
 
