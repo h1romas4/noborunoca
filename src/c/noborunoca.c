@@ -34,7 +34,8 @@
 #define GAME_POWER_MAX 56
 #define GAME_JUMP_EXTENTION_FRAME 4
 #define GAME_LEVEL_EXTEND 20
-#define GAME_INIT_HISCORE 50
+#define GAME_INIT_HISCORE 300
+#define GAME_EXTEND_FLOOR 30
 
 #define GAME_SCAFFOLD_FILL 0x3fffff // 22bit
 
@@ -45,6 +46,8 @@ extern uint8_t sprite_char1_color1[], sprite_char1_color2[];
 extern uint8_t sprite_char2_color1[], sprite_char2_color2[];
 // 音楽・効果音のラベル参照（psgdriver.asm 用）
 extern uint8_t music_title[], music_main[], music_game_over[], music_game_over_2[], sound_extend[];
+// 特殊効果音（ジャンプ）
+extern uint8_t sound_external_jump[];
 // サウンドステータス（ワークエリアから取得）
 extern uint8_t sounddrv_bgmwk[];
 
@@ -68,11 +71,12 @@ typedef struct {
     uint8_t power_trigger;
     uint8_t jump_extention_tick;
     uint8_t level;
+    uint8_t level_internal;
     uint8_t stick_state;
     uint8_t sound_play;
+    uint8_t sound_jump_index;
     uint16_t tick;
     uint8_t trigger_state;
-    uint16_t level_extend;
 } game_t;
 
 game_t game;
@@ -159,6 +163,54 @@ void init_graphics()
     set_sprite_16(3, sprite_char2_color2);
 }
 
+#ifndef __INTELLISENSE__
+void write_psg(uint8_t reg, uint8_t dat)
+{
+#asm
+    LD   HL , 2    ;
+    ADD  HL, SP    ; skip over return address on stack
+    LD   E, (HL)   ; WRTPSG(E)
+    INC  HL        ; skip value call stack
+    INC  HL        ;
+    LD   A,(HL)    ; WRTPSG(A)
+    CALL $0093     ; call WRTPSG(A, E)
+#endasm
+}
+#endif
+
+/**
+ * 特殊効果音
+ */
+void sound_jump()
+{
+    // 発音なしもしくはファンファーレ発音中
+    if(game.sound_jump_index == 0 && game.sound_play == 1) {
+        // ボリューム設定
+        write_psg(0xa, 0x0);
+        return;
+    }
+    // インデックス
+    uint8_t index = game.sound_jump_index - 1;
+    // 発音が最後まできた
+    if(sound_external_jump[index] == 0xff || index >= 60) {
+        game.sound_jump_index = 0;
+        return;
+    }
+    // トーン取得
+    uint16_t tone = sound_external_jump[index];
+    // ファンファーレ再生中は鳴らさない
+    if(game.sound_play != 2) {
+        // ボリューム設定
+        write_psg(0xa, 14);
+        // トーン設定
+        write_psg(0x4, tone & 0xff);
+        write_psg(0x5, (tone & 0x0f00) >> 8);
+    }
+
+    // インデックス増加
+    game.sound_jump_index ++;
+}
+
 /**
  * スコア表示
  */
@@ -203,22 +255,20 @@ void print_extend()
     // レベル
     sprintf(extend_string, "%3u", game.level);
     vwrite(extend_string, VPOS(29, 17), 3);
+    // 階数
+    sprintf(extend_string, "%3u", GAME_EXTEND_FLOOR - game_stage.climbed_pos);
+    vwrite(extend_string, VPOS(29, 22), 3);
 }
 
 /**
  * 足場生成
  */
-void create_scaffold(uint8_t y, uint8_t level)
+void create_scaffold(uint8_t y)
 {
+    uint8_t level = game.level_internal;
+
     uint8_t hole_width = 4;
     uint8_t floor_interval = 4;
-
-    // レベル補正
-    // if(get_rnd() % 255 >= game.level) {
-    //     floor_interval -= get_rnd() % 4;
-    // } else {
-    //     floor_interval += get_rnd() % 3;
-    // }
 
     // フロアインターバル判定
     uint8_t interval = 0;
@@ -237,7 +287,7 @@ void create_scaffold(uint8_t y, uint8_t level)
     }
 
     // エクステンドフロアは埋める
-    if(game_stage.climbed_pos == 0) {
+    if(game_stage.climbed_pos++ == 0) {
         game_stage.scaffold[y] = GAME_SCAFFOLD_FILL;
         return;
     }
@@ -248,7 +298,7 @@ void create_scaffold(uint8_t y, uint8_t level)
         // 下のフロアの足場状態取得
         uint8_t lower_hole = (lower_floor >> xx) & /* 良い足場 */ 0xf;
         // 下のフロアに良い足場があれば x/22 の確率で穴を生成
-        if(lower_hole != 0 && get_rnd() % STAGE_WIDTH <= /* TODO: x */ level) {
+        if(lower_hole != 0 && get_rnd() % STAGE_WIDTH <= level) {
             hole ^= (uint32_t)((2 << (hole_width - 1)) - 1) << xx;
             xx += hole_width + /* TODO: */ 3;
         }
@@ -379,7 +429,7 @@ void scroll_scaffold_line(void)
 /**
  * 足場スクロール
  */
-void scroll_scaffold(uint8_t level)
+void scroll_scaffold()
 {
     // 1ラインスクロール
     scroll_scaffold_line();
@@ -392,7 +442,7 @@ void scroll_scaffold(uint8_t level)
         // 仮想 VRAM をスクロール
         memmove(&game_stage.scaffold[1], &game_stage.scaffold[0], sizeof(uint32_t) * (STAGE_HEIGHT));
         // スクロール外の足場生成
-        create_scaffold(0, level);
+        create_scaffold(0);
     }
 }
 
@@ -455,7 +505,7 @@ void sprite_my()
 /**
  * 自機の移動処理
  */
-bool move_my(uint8_t jump_power)
+void move_my(uint8_t jump_power)
 {
     // 自機は常に左右に移動
     my.x += my.vx;
@@ -539,6 +589,8 @@ bool move_my(uint8_t jump_power)
             my.y_prev = my.y;
             // 自由落下ベクトルを初期化
             my.vy = 0;
+            // ジャンプ効果音停止
+            game.sound_jump_index = 0;
         }
     } else if(my.can_jump && adjust_jump_power == 0 && game_stage.scroll_adjust > 0) {
         // 歩き中は強制スクロール分調整
@@ -547,11 +599,6 @@ bool move_my(uint8_t jump_power)
 
     // スプライト表示
     sprite_my();
-
-    // 自機やられ
-    if(my.y >= 184) return false;
-
-    return true;
 }
 
 /**
@@ -571,13 +618,14 @@ void init_game_state()
 
     // ゲーム状態
     game.level = GAME_INIT_LEVEL;
+    game.level_internal = GAME_INIT_LEVEL;
     game.power = GAME_INIT_POWER;
     game.power_v = GAME_INIT_POWER_V;
     game.power_trigger = GAME_INIT_POWER_TRIGGER;
     game.jump_extention_tick = 0;
-    game.level_extend = GAME_LEVEL_EXTEND;
     game.sound_play = 0;
     game.score = 0;
+    game.sound_jump_index = 0;
 
     // ステージ状態
     game_stage.scroll_adjust = 0;
@@ -587,8 +635,7 @@ void init_game_state()
     game_stage.scaffold[STAGE_HEIGHT] = GAME_SCAFFOLD_FILL;
     // 下の足場との距離を測るため下から上に足場生成
     for(int8_t y = STAGE_HEIGHT - 1; y >= 0; y--) {
-        game_stage.climbed_pos++;
-        create_scaffold(y, game.level);
+        create_scaffold(y);
     }
 }
 
@@ -612,11 +659,11 @@ void screen_init()
     vwrite("  SCORE", VPOS(25,  5), 7);
     vwrite("  POWER", VPOS(25, 10), 7);
     vwrite("  LEVEL", VPOS(25, 15), 7);
+    vwrite(" REMAIN", VPOS(25, 20), 7);
 
     // ステート表示
     print_score();
     print_power();
-    print_extend();
 }
 
 /**
@@ -659,12 +706,16 @@ void title_init()
     // 初期足場表示
     print_scaffold(STAGE_HEIGHT);
 
+    // 足場残り初期化
+    game_stage.climbed_pos = 0;
+    print_extend();
+
     // タイトル表示
     print_string_screen("                ", 16, 4,  9);
     print_string_screen("   NOBORUNOCA   ", 16, 4, 10);
     print_string_screen("                ", 16, 4, 11);
     print_string_screen("                ", 16, 4, 12);
-    print_string_screen(" HIT SPCAE KEY! ", 16, 4, 13);
+    print_string_screen(" HIT SPACE KEY! ", 16, 4, 13);
     print_string_screen("                ", 16, 4, 14);
 
     // アドバタイズデモに遷移
@@ -719,6 +770,9 @@ void title_advertise(uint8_t trigger)
  */
 void game_init()
 {
+    // サウンド停止
+    sounddrv_stop();
+
     // 画面クリア
     fill(VRAM_START, 0x20, VRAM_WIDTH * VRAM_HEIGHT);
 
@@ -730,6 +784,10 @@ void game_init()
 
     // 初期足場表示
     print_scaffold(STAGE_HEIGHT);
+
+    // 足場残り初期化
+    game_stage.climbed_pos = 0;
+    print_extend();
 
     // ジャンピングスタート
     game.jump_extention_tick = GAME_JUMP_EXTENTION_FRAME;
@@ -744,7 +802,7 @@ void game_init()
  */
 void game_over(uint8_t trigger)
 {
-    // HIT SPACE KEY
+    // HIT SPACE KEY（60フレームは受け付けない）
     if(trigger && game.tick > 60) {
         // タイトルに遷移
         game.state = TITLE_INIT;
@@ -754,7 +812,7 @@ void game_over(uint8_t trigger)
     print_string_screen("   GAME OVER    ", 16, 4, 10);
     print_string_screen("                ", 16, 4, 11);
     print_string_screen("                ", 16, 4, 12);
-    print_string_screen(" HIT SPCAE KEY! ", 16, 4, 13);
+    print_string_screen(" HIT SPACE KEY! ", 16, 4, 13);
     print_string_screen("                ", 16, 4, 14);
 
     game.tick++;
@@ -783,8 +841,11 @@ void game_main(uint8_t trigger)
         game.sound_play = 1;
     }
 
-    // ゲームスピード調整
-    if(game.tick++ % 3 == 0) return;
+    // ジャンプ効果音
+    sound_jump();
+
+    // ゲームスピード調整（レベル 10 以降はスピードアップ）
+    if(game.level < 10 && game.tick++ % 3 == 0) return;
 
     // 足場スクロール
     scroll_scaffold(game.level);
@@ -811,6 +872,10 @@ void game_main(uint8_t trigger)
             // ジャンプパワー決定
             jump_power = game.power;
             game.jump_extention_tick = 0;
+            // ジャンプボーナス
+            game.score += 2;
+            // ジャンプ効果音開始
+            game.sound_jump_index = 1;
         } else {
             // 連続ジャンプトリガー猶予設定
             game.jump_extention_tick = GAME_JUMP_EXTENTION_FRAME;
@@ -822,6 +887,7 @@ void game_main(uint8_t trigger)
     if(game.jump_extention_tick > 0) {
         // 猶予フレーム内に落下しなければジャンプは成立しない
         if(game.jump_extention_tick <= 1) {
+            // ジャンプパワー初期化
             game.power = GAME_INIT_POWER;
             jump_power = game.power;
             game.jump_extention_tick = 0;
@@ -829,13 +895,23 @@ void game_main(uint8_t trigger)
     }
     // 猶予フレーム内ならジャンプ開始
     if(my.can_jump && game.jump_extention_tick > 0) {
+        // ジャンプ効果音開始
+        game.sound_jump_index = 1;
+        // ジャンプパワー初期化
         jump_power = game.power;
         game.power = GAME_INIT_POWER;
         game.jump_extention_tick = 0;
+        // 目押しジャンプボーナス
+        game.score += 5;
     }
 
     // 自機移動とジャンプ
-    if(!move_my(jump_power)) {
+    move_my(jump_power);
+
+    // 自機やられ判定
+    if(my.y >= 184) {
+        // サウンド停止
+        sounddrv_stop();
         // やられサウンド再生
         game.sound_play = 2;
         sounddrv_bgmplay(music_game_over_2);
@@ -846,7 +922,7 @@ void game_main(uint8_t trigger)
 
     // 登りボーナス
     if(game.tick % 60 == 0) {
-        game.score += 1;
+        game.score += 5;
     }
     // ハイスコア更新
     if(game.score_hi < game.score) {
@@ -854,14 +930,20 @@ void game_main(uint8_t trigger)
     }
 
     // レベルエクステンド
-    if(game.level_extend < game.score) {
+    if(game_stage.climbed_pos > GAME_EXTEND_FLOOR) {
         // レベルエクステンドサウンド再生
         game.sound_play = 2;
         sounddrv_bgmplay(sound_extend);
-        // 次回エクステンド更新
-        game.level_extend += GAME_LEVEL_EXTEND;
+        // 次回エクステンド更新（全埋足場生成）
+        game_stage.climbed_pos = 0;
         game.level++;
-        if(game.level > 5) game.level = 5;
+        game.level_internal = game.level;
+        // 足場構造を決定する内部レベルは 4 で上限
+        if(game.level > 4) {
+            game.level_internal = 4;
+        }
+        // レベルボーナス
+        game.score += 30;
         // レベル更新
         print_extend();
     }
@@ -869,6 +951,7 @@ void game_main(uint8_t trigger)
     // スコア表示(遅くなるので 30フレームごと)
     if(game.tick % 30 == 0) {
         print_score();
+        print_extend();
     }
 }
 

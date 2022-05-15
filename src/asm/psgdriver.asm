@@ -593,7 +593,9 @@ SOUNDDRV_SETPSG_MIXING_L1:
     JR NZ,SOUNDDRV_SETPSG_MIXING_L2     ; ゼロでないならBGMトラックが設定されているので、次の処理をスキップ
 
     ; BGMもSFXも未設定の場合は、ミキシング値を%11(Noise,Tone=Off)にする
-    LD D,%11
+    ; LD D,%11
+    ; noborunca hack by h1romas4
+    LD D,%10
     JR SOUNDDRV_SETPSG_MIXING_L3
 
 SOUNDDRV_SETPSG_MIXING_L2:
