@@ -2,7 +2,7 @@
 
 ![](https://raw.githubusercontent.com/h1romas4/noborunoca/main/docs/noborunoca-01.png)
 
-[Playable by WebMSX](https://webmsx.org/cbios/?MACHINE=MSX2J&ROM=https://github.com/h1romas4/noborunoca/releases/download/v1.0.0/noborunoca.rom)
+🎮 [Let's Play! by WebMSX](https://webmsx.org/cbios/?MACHINE=MSX2J&ROM=https://github.com/h1romas4/noborunoca/releases/download/v1.0.0/noborunoca.rom)
 
 ## License
 
@@ -21,7 +21,7 @@ BSD 3-Clause License
 
 ### Require
 
-- Ubuntu 20.04 LTS or Windows WSL2
+- Ubuntu 20.04 LTS or Ubuntu 22.04 LTS or Windows WSL2
 - Setup [Z88DK](https://github.com/z88dk/z88dk/wiki/installation#linux--unix)
 - cmake (`sudo apt install cmake`)
 
