@@ -12,6 +12,8 @@
 
 BSD 3-Clause License
 
+Includes all source code and resources.
+
 ## Special Thanks
 
 - [Z88DK - The Development Kit for Z80 Computers](https://github.com/z88dk/z88dk) - Compiler and toolchain
