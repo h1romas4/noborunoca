@@ -10,7 +10,7 @@
 
 ## License
 
-BSD 3-Clause License
+MIT License
 
 Includes all source code and resources.
 
