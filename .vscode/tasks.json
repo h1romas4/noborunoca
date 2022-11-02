@@ -50,14 +50,14 @@
           "label": "Launch MAME with debugger",
           "type": "shell",
           "linux": {
-              "command": "(cd ${MAME_HOME} && ./cbios cbios noborunoca -window -debugger gdbstub -debug)"
+              "command": "(cd ${MAME_HOME} && ./cbios cbios noborunoca -rompath ${workspaceFolder}/mics/mame/roms/msx1_cart -hashpath ${workspaceFolder}/mics/mame/hash -window -debugger gdbstub -debug)"
           }
         },
         {
-          "label": "Deploy to MAME",
+          "label": "Deploy for MAME",
           "type": "shell",
           "linux": {
-              "command": "(cd ${workspaceFolder}/dist && rm -f noborunoca.zip && zip -u noborunoca.zip noborunoca.rom) && cp -p ${workspaceFolder}/dist/noborunoca.zip ${MAME_HOME}/roms/msx1_cart/"
+              "command": "(cd dist/ && rm -f ${workspaceFolder}/mics/mame/roms/msx1_cart/noborunoca.zip && zip -j ${workspaceFolder}/mics/mame/roms/msx1_cart/noborunoca.zip noborunoca.rom)"
           }
         }
     ]
