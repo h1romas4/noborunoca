@@ -1,70 +1,77 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Clean CMake directory",
-            "type": "shell",
-            "linux": {
-                "command": "rm -Rf ${workspaceFolder}/build && mkdir ${workspaceFolder}/build"
-            }
-        },
-        {
-            "label": "Clean Build (make)",
-            "type": "shell",
-            "linux": {
-                "command": "(cd ${workspaceFolder}/build && make clean && rm -f ${workspaceFolder}/dist/*)"
-            }
-        },
-        {
-            "label": "Run CMake (cmake)",
-            "type": "shell",
-            "dependsOn": "Clean CMake directory",
-            "linux": {
-                "command": "(cd ${workspaceFolder}/build && cmake -DCMAKE_TOOLCHAIN_FILE=${workspaceFolder}/cmake/z88dk.cmake ..)"
-            }
-        },
-        {
-            "label": "Run Build (make)",
-            "type": "shell",
-            "linux": {
-                "command": "(cd ${workspaceFolder}/build && make)"
-            }
-        },
-        {
-            "label": "Launch openMSX",
-            "type": "shell",
-            "linux": {
-                "command": "openmsx ${workspaceFolder}/dist/noborunoca.rom"
-            }
-        },
-        {
-            "label": "Launch openMSX debugger",
-            "type": "shell",
-            "linux": {
-                "command": "openmsx-debugger"
-            }
-        },
-        {
-          "label": "Launch MAME",
-          "type": "shell",
-          "dependsOn":[
-            "Deploy for MAME"
-          ],
-          "linux": {
-              "command": "(cd ${MAME_HOME} && ./cbios cbios noborunoca -rompath ${workspaceFolder}/mics/mame/roms -hashpath ${workspaceFolder}/mics/mame/hash -cfg_directory ${workspaceFolder}/mics/mame/cfg -window -resolution 800x600 -video soft -nofilter)"
-          }
-        },
-        {
-          "label": "Launch MAME with debugger",
-          "type": "shell",
-          "dependsOn":[
-            "Deploy for MAME"
-          ],
-          "linux": {
-              "command": "(cd ${MAME_HOME} && ./cbios cbios noborunoca -rompath ${workspaceFolder}/mics/mame/roms -hashpath ${workspaceFolder}/mics/mame/hash -cfg_directory ${workspaceFolder}/mics/mame/cfg -window -resolution 800x600 -video soft -nofilter -debugger gdbstub -debug)"
-          }
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+        "label": "Clean CMake directory",
+        "type": "shell",
+        "linux": {
+            "command": "rm -Rf ${workspaceFolder}/build && mkdir ${workspaceFolder}/build"
         }
-      ]
+    },
+    {
+        "label": "Clean Build (make)",
+        "type": "shell",
+        "linux": {
+            "command": "(cd ${workspaceFolder}/build && make clean && rm -f ${workspaceFolder}/dist/*)"
+        }
+    },
+    {
+        "label": "Run CMake (cmake)",
+        "type": "shell",
+        "dependsOn": "Clean CMake directory",
+        "linux": {
+            "command": "(cd ${workspaceFolder}/build && cmake -DCMAKE_TOOLCHAIN_FILE=${workspaceFolder}/cmake/z88dk.cmake ..)"
+        }
+    },
+    {
+        "label": "Run Build (make)",
+        "type": "shell",
+        "linux": {
+            "command": "(cd ${workspaceFolder}/build && make)"
+        }
+    },
+    {
+        "label": "Launch openMSX",
+        "type": "shell",
+        "linux": {
+            "command": "openmsx ${workspaceFolder}/dist/noborunoca.rom"
+        }
+    },
+    {
+        "label": "Launch openMSX debugger",
+        "type": "shell",
+        "linux": {
+            "command": "openmsx-debugger"
+        }
+    },
+    {
+      "label": "Launch MAME",
+      "type": "shell",
+      "dependsOn":[
+        "Deploy for MAME"
+      ],
+      "linux": {
+          "command": "(cd ${workspaceFolder}/mics/mame && ./cbios cbios noborunoca)"
+      }
+    },
+    {
+      "label": "Launch MAME with debugger",
+      "type": "shell",
+      "dependsOn":[
+        "Deploy for MAME"
+      ],
+      "linux": {
+          "command": "(cd ${workspaceFolder}/mics/mame && ./cbios cbios noborunoca -debugger gdbstub -debug)"
+      }
+    },
+    {
+      "label": "Deploy for MAME",
+      "type": "shell",
+      "linux": {
+          "command": "(cd dist/ && rm -f ${workspaceFolder}/mics/mame/roms/msx1_cart/noborunoca.zip && zip -j ${workspaceFolder}/mics/mame/roms/msx1_cart/noborunoca.zip noborunoca.rom)"
+      }
+    }
+  ]
 }
