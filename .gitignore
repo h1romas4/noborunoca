@@ -3,4 +3,4 @@ dist/
 .tmp/
 .ticks_history.txt
 __pycache__
-mics/mame/roms/msx1_cart/*.zip
+mics/mame/roms/
