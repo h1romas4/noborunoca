@@ -4,3 +4,4 @@ dist/
 .ticks_history.txt
 __pycache__
 mics/mame/roms/
+mics/mame/cbios
