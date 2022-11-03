@@ -71,3 +71,9 @@ Verifiy
 ls -laF ../dist/*.rom
 -rw-rw-r-- 1 hiromasa hiromasa  16384  9月  3 18:13 noborunoca.rom
 ```
+
+## See also
+
+> Z88DK MSX build template with sample game
+>
+> https://github.com/h1romas4/z88dk-msx-template
