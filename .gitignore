@@ -2,6 +2,7 @@ build/
 dist/
 .tmp/
 .ticks_history.txt
+*.lis
 __pycache__
 mics/mame/roms/
 mics/mame/nvram/
