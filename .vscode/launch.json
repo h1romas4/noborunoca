@@ -27,7 +27,7 @@
         "mame": {
           "port": 23946
         },
-        "z88dkv2": [
+        "z88dkv2": [ // 3.0 or higher
             {
               "path": "src/asm/psgdriver.asm.lis",
               "mapFile": "dist/noborunoca.map",
