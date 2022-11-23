@@ -53,7 +53,7 @@
         "Deploy for MAME"
       ],
       "linux": {
-          "command": "(cd ${workspaceFolder}/mics/mame && ./cbios cbios noborunoca)"
+          "command": "(cd ${workspaceFolder}/mics/mame && ./mame cbiosm2jp noborunoca)"
       }
     },
     {
@@ -63,7 +63,7 @@
         "Deploy for MAME"
       ],
       "linux": {
-          "command": "(cd ${workspaceFolder}/mics/mame && ./cbios cbios noborunoca -debugger gdbstub -debug)"
+          "command": "(cd ${workspaceFolder}/mics/mame && ./mame cbiosm2jp noborunoca -debugger gdbstub -debug)"
       }
     },
     {

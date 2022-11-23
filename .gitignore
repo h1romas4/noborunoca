@@ -6,4 +6,5 @@ dist/
 __pycache__
 mics/mame/roms/
 mics/mame/nvram/
-mics/mame/cbios
+mics/mame/cbios/
+mics/mame/mame
