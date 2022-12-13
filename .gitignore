@@ -4,7 +4,4 @@ dist/
 .ticks_history.txt
 *.lis
 __pycache__
-mics/mame/roms/
-mics/mame/nvram/
-mics/mame/cbios/
-mics/mame/mame
+mics/mame/
