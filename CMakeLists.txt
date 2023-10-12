@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
+# for clangd (LSP)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # target name "noborunoca.rom"
 project(noborunoca.rom C ASM)
 

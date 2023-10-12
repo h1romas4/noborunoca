@@ -1,6 +1,7 @@
 build/
 dist/
 .tmp/
+.cache/
 .ticks_history.txt
 *.lis
 __pycache__
