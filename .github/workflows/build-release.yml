@@ -4,43 +4,43 @@ on:
   workflow_call:
     inputs:
       release:
-        description: 'release'
+        description: "release"
         type: boolean
         required: true
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v1
-      with:
-        submodules: recursive
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v1
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Z88DK Toolchain Setup
-      run: |
-        sudo snap install z88dk --beta
-        sudo apt install cmake ninja-build
+      - name: Z88DK Toolchain Setup
+        run: |
+          sudo snap install z88dk --beta
+          sudo apt install cmake ninja-build
 
-    - name: Build
-      run: |
-        export Z88DK_HOME=/snap/z88dk/current
-        export ZCCCFG=${Z88DK_HOME}/share/z88dk/lib/config
-        export PATH=${Z88DK_HOME}/bin:${PATH}
-        mkdir build
-        cd build
-        /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/z88dk.cmake -GNinja ..
-        ninja
+      - name: Build
+        run: |
+          export Z88DK_HOME=/snap/z88dk/current
+          export ZCCCFG=${Z88DK_HOME}/share/z88dk/lib/config
+          export PATH=${Z88DK_HOME}/bin:${PATH}
+          mkdir build
+          cd build
+          /usr/bin/cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/z88dk.cmake -GNinja ..
+          ninja
 
-    - name: Check
-      run: |
-        TARGET=dist/noborunoca.rom
-        ls -laF ${TARGET}
-        file ${TARGET} | grep 'MSX ROM' | grep '0x4010'
-        md5sum ${TARGET}
+      - name: Check
+        run: |
+          TARGET=dist/noborunoca.rom
+          ls -laF ${TARGET}
+          file ${TARGET} | grep 'MSX ROM' | grep '0x4010'
+          md5sum ${TARGET}
 
-    - uses: ncipollo/release-action@v1
-      if: ${{ inputs.release }}
-      with:
-        artifacts: "dist/noborunoca.rom"
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ncipollo/release-action@v1
+        if: ${{ inputs.release }}
+        with:
+          artifacts: "dist/noborunoca.rom"
+          token: ${{ secrets.GITHUB_TOKEN }}

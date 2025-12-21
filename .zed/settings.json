@@ -6,7 +6,10 @@
   "lsp": {
     "clangd": {
       "binary": {
-        "arguments": ["--compile-commands-dir=build"],
+        "arguments": [
+          "--compile-commands-dir=build",
+          "--extra-arg=-Wno-sign-compare",
+        ],
       },
     },
   },
