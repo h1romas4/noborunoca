@@ -24,10 +24,13 @@ jobs:
           cpanm App::Prove Capture::Tiny::Extended CPU::Z80::Assembler Data::HexDump File::Path List::Uniq Modern::Perl Object::Tiny::RW Test::Cmd Test::Cmd::Common Test::Harness Test::HexDifferences Text::Table YAML::Tiny
           eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
           git clone --recursive https://github.com/z88dk/z88dk.git
-          cd z88dk
+          pushd z88dk
           git checkout 9ffe204 # z88dk v2.2
-          ./build.sh -p msx
+          ./build.sh
           ls -laF bin/
+          popd
+          ls -laF
+
       - name: Build
         run: |
           export Z88DK_HOME=z88dk/
