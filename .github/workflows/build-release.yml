@@ -19,12 +19,18 @@ jobs:
 
       - name: Z88DK Toolchain Setup
         run: |
-          sudo snap install z88dk --beta
           sudo apt install cmake ninja-build
-
+          sudo apt install -y ragel re2c dos2unix texinfo texi2html gdb curl cpanminus ccache libboost-all-dev libmodern-perl-perl libyaml-perl liblocal-lib-perl libcapture-tiny-perl libpath-tiny-perl libtest-differences-perl libtext-table-perl libdata-hexdump-perl libregexp-common-perl libclone-perl
+          cpanm App::Prove Capture::Tiny::Extended CPU::Z80::Assembler Data::HexDump File::Path List::Uniq Modern::Perl Object::Tiny::RW Test::Cmd Test::Cmd::Common Test::Harness Test::HexDifferences Text::Table YAML::Tiny
+          eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+          git clone --recursive https://github.com/z88dk/z88dk.git
+          cd z88dk
+          git checkout 9ffe204 # z88dk v2.2
+          ./build.sh -p msx
+          ls -laF bin/
       - name: Build
         run: |
-          export Z88DK_HOME=/snap/z88dk/current
+          export Z88DK_HOME=z88dk/
           export ZCCCFG=${Z88DK_HOME}/share/z88dk/lib/config
           export PATH=${Z88DK_HOME}/bin:${PATH}
           mkdir build
