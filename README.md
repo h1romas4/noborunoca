@@ -27,8 +27,9 @@ Includes all source code and resources.
 
 ### Require
 
-- Ubuntu 20.04 LTS or Ubuntu 22.04 LTS or Windows WSL2
-- Setup [Z88DK](https://github.com/z88dk/z88dk/wiki/installation#linux--unix)
+- Ubuntu 24.04 LTS or Ubuntu 22.04 LTS or Windows WSL2
+- Z88DK v2.2
+    - Setup [Z88DK](https://github.com/z88dk/z88dk/wiki/installation#linux--unix)
 - cmake (`sudo apt install cmake`)
 
 Set enviroments on `~/.bashrc`
