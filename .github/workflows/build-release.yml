@@ -23,9 +23,7 @@ jobs:
         with:
           path: |
             z88dk
-            ~/.cache/ccache
-            ~/.cpanm
-          key: z88dk-${{ runner.os }}-v2.2-a9c9c3bc
+          key: z88dk-${{ runner.os }}-v2.2-5ae3711
 
       - name: Setup Build Container
         run: |
