@@ -25,19 +25,19 @@ jobs:
             z88dk
             ~/.cache/ccache
             ~/.cpanm
-          key: z88dk-${{ runner.os }}-v2.2-881b7569
+          key: z88dk-${{ runner.os }}-v2.2-a9c9c3bc
 
       - name: Setup Build Container
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build
           sudo apt-get install -y ragel re2c dos2unix texinfo texi2html gdb curl cpanminus ccache libboost-all-dev libmodern-perl-perl libyaml-perl liblocal-lib-perl libcapture-tiny-perl libpath-tiny-perl libtest-differences-perl libtext-table-perl libdata-hexdump-perl libregexp-common-perl libclone-perl
-          cpanm App::Prove Capture::Tiny::Extended CPU::Z80::Assembler Data::HexDump File::Path List::Uniq Modern::Perl Object::Tiny::RW Test::Cmd Test::Cmd::Common Test::Harness Test::HexDifferences Text::Table YAML::Tiny
-          eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
 
       - name: Z88DK Toolchain Setup
         if: steps.z88dk-cache.outputs.cache-hit != 'true'
         run: |
+          cpanm App::Prove Capture::Tiny::Extended CPU::Z80::Assembler Data::HexDump File::Path List::Uniq Modern::Perl Object::Tiny::RW Test::Cmd Test::Cmd::Common Test::Harness Test::HexDifferences Text::Table YAML::Tiny
+          eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
           git clone --depth 1 --branch v2.2 https://github.com/z88dk/z88dk.git
           cd z88dk
           git submodule update --init --recursive --depth 1
