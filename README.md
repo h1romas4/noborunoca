@@ -30,6 +30,7 @@ Includes all source code and resources.
 - Ubuntu 24.04 LTS or Ubuntu 22.04 LTS or Windows WSL2
 - Z88DK v2.2
     - Setup [Z88DK](https://github.com/z88dk/z88dk/wiki/installation#linux--unix)
+    - [.github/workflows/build-release.yml](https://github.com/h1romas4/noborunoca/blob/82297c63100820b234ac9c79967305e776f040ac/.github/workflows/build-release.yml#L28-L45)
 - cmake (`sudo apt install cmake`)
 
 Set enviroments on `~/.bashrc`
