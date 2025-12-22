@@ -59,7 +59,7 @@ jobs:
           TARGET=dist/noborunoca.rom
           ls -laF ${TARGET}
           file ${TARGET} | grep 'MSX ROM' | grep '0x4010'
-          sha256sum dist/noborunoca.rom | tee dist/noborunoca.rom.sha256
+          sha256sum ${TARGET} | tee ${TARGET}.sha256
 
       - uses: ncipollo/release-action@v1
         if: ${{ inputs.release }}
