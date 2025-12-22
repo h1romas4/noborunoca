@@ -17,7 +17,18 @@ jobs:
           submodules: recursive
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Cache z88dk, ccache and cpanm
+        uses: actions/cache@v4
+        id: z88dk-cache
+        with:
+          path: |
+            z88dk
+            ~/.cache/ccache
+            ~/.cpanm
+          key: z88dk-${{ runner.os }}-v2.2
+
       - name: Z88DK Toolchain Setup
+        if: steps.z88dk-cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build
