@@ -28,7 +28,7 @@ Includes all source code and resources.
 ### Require
 
 - Ubuntu 24.04 LTS or Ubuntu 22.04 LTS or Windows WSL2
-- Z88DK v2.2
+- Z88DK v2.4
     - Setup [Z88DK](https://github.com/z88dk/z88dk/wiki/installation#linux--unix)
     - [.github/workflows/build-release.yml](https://github.com/h1romas4/noborunoca/blob/82297c63100820b234ac9c79967305e776f040ac/.github/workflows/build-release.yml#L28-L45)
 - cmake (`sudo apt install cmake`)
@@ -48,9 +48,9 @@ Verifiy
 $ which zcc
 /home/hiromasa/devel/msx/z88dk/bin/zcc
 $ ls -laF ${ZCCCFG}/msx.cfg
--rw-rw-r-- 1 hiromasa hiromasa 1035  9月  1 12:10 /home/hiromasa/devel/msx/z88dk/lib/config/msx.cfg
+-rw-rw-r-- 1 hiromasa hiromasa 1627 12月 22 20:18 /home/hiromasa/devel/msx/z88dk/lib/config/msx.cfg
 $ zcc 2>&1 | head -5
-zcc - Frontend for the z88dk Cross-C Compiler - v18586-be7c8763a-20210901
+zcc - Frontend for the z88dk Cross-C Compiler - v23854-4d530b6eb7-20251222
 
 Usage: zcc +[target] {options} {files}
    -v -verbose                  Output all commands that are run (-vn suppresses)
@@ -62,16 +62,15 @@ Usage: zcc +[target] {options} {files}
 Compile
 
 ```
-mkdir build && cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/z88dk.cmake ..
-make
+cmake -S . -B build
+cmake --build build
 ```
 
 Verifiy
 
 ```
-ls -laF ../dist/*.rom
--rw-rw-r-- 1 hiromasa hiromasa  16384  9月  3 18:13 noborunoca.rom
+ls -laF ./dist/*.rom
+-rw-rw-r-- 1 hiromasa hiromasa 32768 12月 23 17:07 ./dist/noborunoca.rom
 ```
 
 ## See also

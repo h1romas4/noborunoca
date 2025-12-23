@@ -1,8 +1,7 @@
 // license:MIT License
 // copyright-holders:Hiromasa Tanaka
 #include <stdio.h>
-#include <stdlib.h>
-
+#include <msx.h>
 #include <msx/gfx.h>
 #include "psgdriver.h"
 
@@ -164,9 +163,9 @@ void init_graphics()
 }
 
 // __INTELLISENSE__ 判定は vscode で非標準インラインアセンブル構文をエラーにしないように挿入
-#ifndef __INTELLISENSE__
 void write_psg(uint8_t reg, uint8_t dat)
 {
+#ifndef __INTELLISENSE__
 #asm
     LD   HL , 2    ;
     ADD  HL, SP    ; skip over return address on stack
@@ -176,8 +175,8 @@ void write_psg(uint8_t reg, uint8_t dat)
     LD   A,(HL)    ; WRTPSG(A)
     CALL $0093     ; call WRTPSG(A, E)
 #endasm
-}
 #endif
+}
 
 /**
  * 特殊効果音
@@ -993,7 +992,7 @@ void loop()
 /**
  * メイン
  */
-void main()
+int main()
 {
     // 画面初期化
     init_graphics();
