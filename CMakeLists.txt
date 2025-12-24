@@ -44,7 +44,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     +msx
     -O2
     -vn
-    -m
     #$<$<COMPILE_LANGUAGE:C>:-debug>
     $<$<COMPILE_LANGUAGE:ASM>:--list>
 )
@@ -60,6 +59,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
     +msx
     -create-app
     -subtype=rom
+    -m
     -lm
     -lmsxbios
 )
