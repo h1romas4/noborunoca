@@ -1,6 +1,5 @@
-; license:MIT License
-; copyright-holders:Hiromasa Tanaka
-
+; SPDX-License-Identifier: MIT
+; SPDX-FileCopyrightText: 2023-2025 Hiromasa Tanaka
 _sprite_char1_color1:
     DB $3F,$40,$40,$94,$94,$80,$80,$41
     DB $42,$24,$22,$12,$11,$08,$04,$03

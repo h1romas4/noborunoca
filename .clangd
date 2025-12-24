@@ -49,9 +49,9 @@ CompileFlags:
 #     - "-D__Z80"
 #     - "-D__SCCZ80"
 #     - "-D__CLANG"
-#     - "-D__INTELLISENSE__"
 #     - "-D__DISABLE_BUILTIN_MEMSET"
 #     - "-D__DISABLE_BUILTIN_MEMCPY"
 #     - "-D__DISABLE_BUILTIN_STRCPY"
 #     - "-D__DISABLE_BUILTIN_STRCHR"
+#     - "-D__INTELLISENSE__"
 #     - "-D__far=" # hack

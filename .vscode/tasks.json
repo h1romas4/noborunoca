@@ -4,77 +4,71 @@
   "version": "2.0.0",
   "tasks": [
     {
-        "label": "Clean CMake directory",
-        "type": "shell",
-        "linux": {
-            "command": "rm -Rf ${workspaceFolder}/build && mkdir ${workspaceFolder}/build"
-        }
+      "label": "Clean CMake directory",
+      "type": "shell",
+      "linux": {
+        "command": "rm -Rf ${workspaceFolder}/build && mkdir ${workspaceFolder}/build",
+      },
     },
     {
-        "label": "Clean Build (make)",
-        "type": "shell",
-        "linux": {
-            "command": "(cd ${workspaceFolder}/build && make clean && rm -f ${workspaceFolder}/dist/*)"
-        }
+      "label": "Clean Build (make)",
+      "type": "shell",
+      "linux": {
+        "command": "(cd ${workspaceFolder}/build && make clean && rm -f ${workspaceFolder}/dist/*)",
+      },
     },
     {
-        "label": "Run CMake (cmake)",
-        "type": "shell",
-        "dependsOn": "Clean CMake directory",
-        "linux": {
-            "command": "(cd ${workspaceFolder}/build && cmake -DCMAKE_TOOLCHAIN_FILE=${workspaceFolder}/cmake/z88dk.cmake ..)"
-        }
+      "label": "Run CMake (cmake)",
+      "type": "shell",
+      "dependsOn": "Clean CMake directory",
+      "linux": {
+        "command": "cmake -S . -B build",
+      },
     },
     {
-        "label": "Run Build (make)",
-        "type": "shell",
-        "linux": {
-            "command": "(cd ${workspaceFolder}/build && make clean && make)"
-        }
+      "label": "Run Build (make)",
+      "type": "shell",
+      "linux": {
+        "command": "cmake --build build",
+      },
     },
     {
-        "label": "Launch openMSX",
-        "type": "shell",
-        "linux": {
-            "command": "openmsx ${workspaceFolder}/dist/noborunoca.rom"
-        }
+      "label": "Launch openMSX",
+      "type": "shell",
+      "linux": {
+        "command": "openmsx ${workspaceFolder}/dist/noborunoca.rom",
+      },
     },
     {
-        "label": "Launch openMSX debugger",
-        "type": "shell",
-        "linux": {
-            "command": "openmsx-debugger"
-        }
+      "label": "Launch openMSX debugger",
+      "type": "shell",
+      "linux": {
+        "command": "openmsx-debugger",
+      },
     },
     {
       "label": "Launch MAME",
       "type": "shell",
-      "dependsOn":[
-        "Deploy for MAME"
-      ],
+      "dependsOn": ["Deploy for MAME"],
       "linux": {
-          "command": "(cd ${workspaceFolder}/mics/mame && ./mame cbiosm2jp noborunoca)"
-      }
+        "command": "(cd ${workspaceFolder}/mics/mame && ./mame cbiosm2jp noborunoca)",
+      },
     },
     {
       "label": "Launch MAME with debugger",
       "type": "shell",
-      "dependsOn":[
-        "Deploy for MAME"
-      ],
+      "dependsOn": ["Deploy for MAME"],
       "linux": {
-          "command": "(cd ${workspaceFolder}/mics/mame && ./mame cbiosm2jp noborunoca -debugger gdbstub -debug)"
-      }
+        "command": "(cd ${workspaceFolder}/mics/mame && ./mame cbiosm2jp noborunoca -debugger gdbstub -debug)",
+      },
     },
     {
       "label": "Deploy for MAME",
       "type": "shell",
-      "dependsOn":[
-        "Run Build (make)"
-      ],
+      "dependsOn": ["Run Build (make)"],
       "linux": {
-          "command": "(cd dist/ && rm -f ${workspaceFolder}/mics/mame/roms/msx1_cart/noborunoca.zip && zip -j ${workspaceFolder}/mics/mame/roms/msx1_cart/noborunoca.zip noborunoca.rom)"
-      }
-    }
-  ]
+        "command": "(cd dist/ && rm -f ${workspaceFolder}/mics/mame/roms/msx1_cart/noborunoca.zip && zip -j ${workspaceFolder}/mics/mame/roms/msx1_cart/noborunoca.zip noborunoca.rom)",
+      },
+    },
+  ],
 }

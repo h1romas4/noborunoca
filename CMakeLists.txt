@@ -42,7 +42,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # Basic compile options
 target_compile_options(${PROJECT_NAME} PRIVATE
     +msx
-    -O3
+    -O2
     -vn
     -m
     #$<$<COMPILE_LANGUAGE:C>:-debug>

@@ -12,20 +12,20 @@
 
 MIT License
 
-Includes all source code and resources.
+This project includes all source code and resources.
 
 ## Special Thanks
 
 - [Z88DK - The Development Kit for Z80 Computers](https://github.com/z88dk/z88dk) - Compiler and toolchain
-- [Lovely Composer](https://1oogames.itch.io/lovely-composer) - Music Sequencer
-- [@aburi6800](https://github.com/aburi6800) - MSX Sound Driver and Convertor
+- [Lovely Composer](https://1oogames.itch.io/lovely-composer) - Music sequencer
+- [@aburi6800](https://github.com/aburi6800) - MSX sound driver and converter
 - [MAME](https://www.mamedev.org/) - Emulator
 - [openMSX](https://openmsx.org/) - Emulator
-- [C-BIOS](http://cbios.sourceforge.net/) - MSX Open Source BIOS
+- [C-BIOS](http://cbios.sourceforge.net/) - MSX open-source BIOS
 
 ## Build
 
-### Require
+### Requirements
 
 - Ubuntu 24.04 LTS or Ubuntu 22.04 LTS or Windows WSL2
 - Z88DK v2.4
@@ -33,7 +33,7 @@ Includes all source code and resources.
     - [.github/workflows/build-release.yml](https://github.com/h1romas4/noborunoca/blob/82297c63100820b234ac9c79967305e776f040ac/.github/workflows/build-release.yml#L28-L45)
 - cmake (`sudo apt install cmake`)
 
-Set enviroments on `~/.bashrc`
+Set environment variables in `~/.bashrc`:
 
 ```
 # z88dk
@@ -42,7 +42,7 @@ export ZCCCFG=${Z88DK_HOME}/lib/config
 export PATH=${Z88DK_HOME}/bin:${PATH}
 ```
 
-Verifiy
+Verify
 
 ```
 $ which zcc
@@ -66,7 +66,7 @@ cmake -S . -B build
 cmake --build build
 ```
 
-Verifiy
+Verify
 
 ```
 ls -laF ./dist/*.rom
